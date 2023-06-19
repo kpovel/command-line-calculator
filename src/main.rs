@@ -45,7 +45,13 @@ fn calculate_expression(expression: &String) -> Option<i32> {
                     Operator::Plus(_) => Some(first_number + second_number),
                     Operator::Minus(_) => Some(first_number - second_number),
                     Operator::Multiply(_) => Some(first_number * second_number),
-                    Operator::Divide(_) => Some(first_number / second_number),
+                    Operator::Divide(_) => {
+                        if second_number != 0 {
+                            return Some(first_number / second_number);
+                        }
+                        println!("Division by zero is not allowed");
+                        None
+                    }
                 },
                 _ => None,
             }
