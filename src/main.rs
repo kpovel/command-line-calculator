@@ -21,8 +21,8 @@ fn main() {
 
 fn show_result(expression: &String, result: Option<i32>) {
     match result {
-        Some(result)=> println!("\n{expression} = {result}"),
-        None => println!("\nUnexpected error when evaluating an expression")
+        Some(result) => println!("\n{expression} = {result}"),
+        None => println!("\nUnexpected error when evaluating an expression"),
     }
 }
 
@@ -31,16 +31,17 @@ fn calculate_expression(expression: &String) -> Option<i32> {
 
     match operator {
         Some(operator) => {
-            let first_number = parse_number(&expression[0..operator.operator_position ]);
+            let first_number = parse_number(&expression[0..operator.operator_position]);
             let second_number = parse_number(&expression[operator.operator_position + 1..]);
-            dbg!(&first_number);
-            dbg!(&second_number);
 
-            match operator.operator {
-                Operators::Plus => Some(first_number + second_number),
-                Operators::Minus => Some(first_number - second_number),
-                Operators::Multiply => Some(first_number * second_number),
-                Operators::Divide => Some(first_number / second_number),
+            match (first_number, second_number) {
+                (Some(first_number), Some(second_number)) => match operator.operator {
+                    Operators::Plus => Some(first_number + second_number),
+                    Operators::Minus => Some(first_number - second_number),
+                    Operators::Multiply => Some(first_number * second_number),
+                    Operators::Divide => Some(first_number / second_number),
+                },
+                _ => None,
             }
         }
         None => None,
@@ -75,12 +76,12 @@ fn find_operator(expression: &String) -> Option<Operator> {
     return None;
 }
 
-fn parse_number(number_to_parse: &str) -> i32 {
+fn parse_number(number_to_parse: &str) -> Option<i32> {
     match number_to_parse.trim().parse() {
-        Ok(num) => num,
+        Ok(num) => Some(num),
         Err(_) => {
-            println!("Error to parse a number");
-            0
+            println!("Error due parse a number");
+            None
         }
     }
 }
